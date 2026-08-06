@@ -1,0 +1,5 @@
+#include <bits/stdc++.h>
+using namespace std;
+struct Fac {vector<pair<int,int>> f;};
+int main(int argc,char**argv){int M=argc>1?atoi(argv[1]):4000000;int S=max(M+100,10000000);vector<bool> isp(S+1,true);isp[0]=isp[1]=false;vector<int> ps;for(int i=2;i<=S;i++)if(isp[i]){ps.push_back(i);if(1LL*i*i<=S)for(long long j=1LL*i*i;j<=S;j+=i)isp[j]=false;}vector<int> seen(M+1);int st=0;int maxN=0;vector<int>Cstar(1), Ls(M+1);for(int m=2;m<=M;m++){++st;long long x=1;int L=0;for(int p:ps){x=x*(p%m)%m;int r=x;if(seen[r]==st)break;seen[r]=st;++L;}Ls[m]=L;bool comp=!isp[m];int v2=__builtin_ctz((unsigned)m);bool genuine=comp && ((m&1)||v2>=3);if(genuine && L>maxN){Cstar.resize(L+1);for(int n=maxN+1;n<=L;n++)Cstar[n]=m;maxN=L;}}
+cout<<"M="<<M<<" maxN="<<maxN<<"\n";int last=0;for(int n=1;n<=maxN;n++)if(Cstar[n]!=last){int m=Cstar[n];cout<<"n="<<n<<" m="<<m<<" L="<<Ls[m]<<" fac=";int z=m;for(int p:ps){if(1LL*p*p>z)break;if(z%p==0){int a=0;while(z%p==0){z/=p;a++;}cout<<p<<"^"<<a<<" ";}}if(z>1)cout<<z<<"^1";cout<<"\n";last=m;}}
