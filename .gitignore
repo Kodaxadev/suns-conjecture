@@ -1,0 +1,17 @@
+# Native build products
+*.exe
+*.out
+*.o
+*.obj
+/build/
+/bin/
+
+# Local checkpoints and scratch output
+tmp_*.txt
+*.tmp
+
+# Editor/OS
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
