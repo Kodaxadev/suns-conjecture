@@ -1,27 +1,44 @@
 # Complete research corpus
 
-The complete Sun's-conjecture handoff is stored as three Base64 text segments because the GitHub connector only accepts UTF-8 file content.
+The complete Sun's-conjecture handoff is stored as Base64 text segments because the GitHub connector accepts UTF-8 file content.
 
-## Reconstruct
+The original `part00` upload failed its Git blob integrity comparison and is intentionally not used. The four `part00a`–`part00d` replacements and `part01`–`part02` were verified against their local Git blob hashes.
+
+## Reconstruct on Linux/macOS
 
 From the repository root:
 
 ```bash
-cat artifacts/suns-conjecture-corpus.tar.xz.b64.part* \
+cat \
+  artifacts/suns-conjecture-corpus.tar.xz.b64.part00a \
+  artifacts/suns-conjecture-corpus.tar.xz.b64.part00b \
+  artifacts/suns-conjecture-corpus.tar.xz.b64.part00c \
+  artifacts/suns-conjecture-corpus.tar.xz.b64.part00d \
+  artifacts/suns-conjecture-corpus.tar.xz.b64.part01 \
+  artifacts/suns-conjecture-corpus.tar.xz.b64.part02 \
   | base64 --decode \
   > artifacts/suns-conjecture-corpus.tar.xz
 
-sha256sum -c artifacts/suns-conjecture-corpus.tar.xz.sha256
+cd artifacts
+sha256sum -c suns-conjecture-corpus.tar.xz.sha256
+cd ..
 mkdir -p corpus
 tar -xJf artifacts/suns-conjecture-corpus.tar.xz -C corpus
 ```
 
-On PowerShell:
+## Reconstruct on PowerShell
 
 ```powershell
-$parts = Get-ChildItem artifacts/suns-conjecture-corpus.tar.xz.b64.part* | Sort-Object Name
-$text = ($parts | ForEach-Object { Get-Content $_ -Raw }) -join ''
-[IO.File]::WriteAllBytes('artifacts/suns-conjecture-corpus.tar.xz', [Convert]::FromBase64String($text))
+$names = @(
+  'part00a','part00b','part00c','part00d','part01','part02'
+)
+$text = ($names | ForEach-Object {
+  Get-Content "artifacts/suns-conjecture-corpus.tar.xz.b64.$_" -Raw
+}) -join ''
+[IO.File]::WriteAllBytes(
+  'artifacts/suns-conjecture-corpus.tar.xz',
+  [Convert]::FromBase64String($text)
+)
 ```
 
 Expected SHA-256:
